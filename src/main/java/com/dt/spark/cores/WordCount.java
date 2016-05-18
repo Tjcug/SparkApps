@@ -18,9 +18,13 @@ import java.util.Arrays;
  */
 public class WordCount {
     public static void main(String[] args) {
-        SparkConf conf=new SparkConf().setAppName("Spark WordCount written by Java").setMaster("local");
+        SparkConf conf=new SparkConf().setAppName("Spark01").setMaster("spark://Master:7077")
+                .set("spark.executor.memory","400m")
+                .set("spark.worker.memory","400m");
+                //.setJars(new String[]{"D://IntelliJ IDEA 15.0.2//BigDataProject//SparkApps//out//artifacts//SparkApps_jar//SparkApps.jar"});
         JavaSparkContext sc=new JavaSparkContext(conf); //其实底层就是Scala的SparkContext
-        JavaRDD<String> lines= sc.textFile("E://TDDOWNLOAD//BigDataSpark//spark-1.6.0-bin-hadoop2.6//README.md",1);
+        JavaRDD<String> lines= sc.textFile("file:/E://TDDOWNLOAD//BigDataSpark//spark-1.6.0-bin-hadoop2.6/README.md",1);
+        //JavaRDD<String> lines= sc.textFile("file:///home/hadoop/softwares/spark-1.6.0-bin-hadoop2.6/README.md",1);
 
         /*
          * 对初始的JavaRDD进行Transformation级别的处理，列入map、filter等高阶函数等的编程，来进行具体的数据计算
