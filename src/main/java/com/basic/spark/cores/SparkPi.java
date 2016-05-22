@@ -1,4 +1,4 @@
-package com.dt.spark.cores;
+package com.basic.spark.cores;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -18,8 +18,8 @@ public class SparkPi{
 
     public static void main(String[] args) {
         SparkConf conf=new SparkConf().setAppName("Spark01").setMaster("spark://Master:7077")
+                .setJars(new String[]{"D:\\IntelliJ IDEA 15.0.2\\BigDataProject\\SparkApps\\out\\artifacts\\SparkApps_jar\\SparkApps.jar"});
         //.setJars(new String[]{"/Users/xuzhanya/Desktop/油气大数据/BigDataProject/SparkApps/out/artifacts/SparkApps_jar/SparkApps.jar"});
-        .setJars(new String[]{Contants.jarPath});
         JavaSparkContext sc=new JavaSparkContext(conf);
         int silices=2;
         int n=100*silices;
@@ -60,6 +60,6 @@ public class SparkPi{
 //        spark.stop()
 //
 
-       // System.out.println(n);
+        System.out.println(n);
     }
 }
