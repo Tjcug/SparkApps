@@ -18,17 +18,13 @@ import java.util.Arrays;
  */
 public class WordCount {
     public static void main(String[] args) {
-        SparkConf conf=new SparkConf().setAppName("Spark01")
-                .setMaster("spark://Master:7077")
-                //.setMaster("local")
-//                .set("spark.executor.memory","400m")
-//                .set("spark.worker.memory","400m")
-//                .set("spark.executor.cores","1")
-//                .set("spark.worker.cores","1")
-                 .setJars(new String[]{"/Users/xuzhanya/Desktop/油气大数据/BigDataProject/SparkApps/out/artifacts/SparkApps_jar/SparkApps.jar"});
+        SparkConf conf=new SparkConf().setAppName("SparkWordCount")
+                 .setMaster("spark://Master:7077")
+                 .setJars(new String[]{Contants.jarPath});
         JavaSparkContext sc=new JavaSparkContext(conf); //其实底层就是Scala的SparkContext
         //JavaRDD<String> lines= sc.textFile("file:/E://TDDOWNLOAD//BigDataSpark//spark-1.6.0-bin-hadoop2.6/README.md",1);
-        JavaRDD<String> lines= sc.textFile("file:///home/hadoop/softwares/spark-1.6.0-bin-hadoop2.6/README.md",1);
+        JavaRDD<String> lines= sc.textFile(Contants.WordCountPath,1);
+
         //JavaRDD<String> lines=sc.textFile("file:///Users/xuzhanya/Desktop/CHANGES.txt",1);
 //        File file=new File("file:///Users/xuzhanya/Desktop/CHANGES.txt");
 //        System.out.println(file.getName());
