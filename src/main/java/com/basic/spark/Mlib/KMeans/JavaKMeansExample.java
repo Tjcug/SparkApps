@@ -1,4 +1,4 @@
-package com.basic.spark.Mlib;
+package com.basic.spark.Mlib.KMeans;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
@@ -17,6 +17,7 @@ import org.apache.spark.rdd.RDD;
 public class JavaKMeansExample {
 
     public static void main(String[] args) {
+
         SparkConf conf = new SparkConf().setAppName("JavaKMeansExample").setMaster("local");
         JavaSparkContext jsc = new JavaSparkContext(conf);
 
