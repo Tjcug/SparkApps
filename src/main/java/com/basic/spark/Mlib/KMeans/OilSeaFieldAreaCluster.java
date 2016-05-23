@@ -1,6 +1,6 @@
 package com.basic.spark.Mlib.KMeans;
 
-import com.basic.spark.util.DataInputUtils;
+import com.basic.spark.DataInput;
 import com.basic.spark.util.MlibUtils;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
@@ -19,7 +19,7 @@ import scala.Tuple2;
 
 import java.io.IOException;
 
-//第一个参数是聚类的类别   第二个参数是需要聚类的年份
+//第1个参数是需要聚类的年份
 
 /**
  * Created by xuzhanya on 16/5/21.
@@ -32,9 +32,8 @@ public class OilSeaFieldAreaCluster {
         JavaSparkContext jsc = new JavaSparkContext(conf);
 
         //数据导入
-        JavaPairRDD<ImmutableBytesWritable, Result> myRDD = DataInputUtils.getOilSeaFieldData(jsc,args);
+        JavaPairRDD<ImmutableBytesWritable, Result> myRDD = DataInput.getOilSeaFieldData(jsc,args[0]);
 
-        if(args[0].equals("area")){
             //如果参数是面积就按照面积进行聚类
             final JavaRDD<Vector> parsedData=myRDD.map(new Function<Tuple2<ImmutableBytesWritable, Result>, Vector>() {
                 @Override
@@ -62,5 +61,4 @@ public class OilSeaFieldAreaCluster {
             MlibUtils.KMeansModelOilField(numClusters,parsedData);
         }
 
-    }
 }
