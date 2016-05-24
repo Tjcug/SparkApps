@@ -41,6 +41,14 @@ public class DataInput {
         scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("SQMC"));      //省区名称
         scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("TMCD"));      //探明程度
         scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("CJYHD"));      //沉积岩厚度
+        scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("HYQCX"));      //含油气层系
+        scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("YX"));      //岩性
+        scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("CCCD"));      //采出程度
+        scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("CCB"));      //储采比
+        scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("ZHHSL"));      //综合含水率
+        scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("LJTMDZCLZL"));      //累计探明地质储量重量
+        scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("LJTMDZCLTJ"));      //累计探明地质储量体积
+
         SingleColumnValueFilter filter = new SingleColumnValueFilter(
                 "info".getBytes(),
                 "NF".getBytes(),

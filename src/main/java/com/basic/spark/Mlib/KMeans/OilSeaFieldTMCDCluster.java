@@ -30,7 +30,7 @@ import java.io.IOException;
 public class OilSeaFieldTMCDCluster {
     private static final Logger log = LoggerFactory.getLogger(OilSeaFieldTMCDCluster.class);
     public static void main(String[] args) throws IOException {
-        SparkConf conf = new SparkConf().setAppName("OilSeaFieldAreaCluster").setMaster("local");
+        SparkConf conf = new SparkConf().setAppName("OilSeaFieldTMCDCluster").setMaster("local");
         JavaSparkContext jsc = new JavaSparkContext(conf);
 
         //数据导入

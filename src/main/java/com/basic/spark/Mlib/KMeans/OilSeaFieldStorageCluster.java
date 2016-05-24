@@ -19,33 +19,37 @@ import scala.Tuple2;
 
 import java.io.IOException;
 
-//第1个参数是需要聚类的年份
+//对石油储量进行聚类
 /**
- *  聚类石油田 按照油气田沉积岩厚度进行聚类
+ * Created by xuzhanya on 16/5/24.
  */
+public class OilSeaFieldStorageCluster {
+    private static final Logger log = LoggerFactory.getLogger(OilSeaFieldStorageCluster.class);
 
-/**
- * Created by xuzhanya on 16/5/23.
- */
-
-public class OilSeaFieldCJYHDCluster {
-    private static final Logger log = LoggerFactory.getLogger(OilSeaFieldTMCDCluster.class);
     public static void main(String[] args) throws IOException {
-
-        SparkConf conf = new SparkConf().setAppName("OilSeaFieldCJYHDCluster").setMaster("local");
+        SparkConf conf = new SparkConf().setAppName("OilSeaFieldStorageCluster").setMaster("local");
         JavaSparkContext jsc = new JavaSparkContext(conf);
 
         //数据导入
         JavaPairRDD<ImmutableBytesWritable, Result> myRDD = DataInput.getOilSeaFieldData(jsc,args[0]);
 
+        //如果参数是面积就按照面积进行聚类
         final JavaRDD<Vector> parsedData=myRDD.map(new Function<Tuple2<ImmutableBytesWritable, Result>, Vector>() {
             @Override
             public Vector call(Tuple2<ImmutableBytesWritable, Result> resultTuple2) throws Exception {
-                double[] values = new double[1];
-                String CJYHDvalue="";
+                double[] values = new double[3];
+                String CCBvalue="";
                 Result result=resultTuple2._2;
-                Cell CJYHDCell=result.getColumnLatestCell("info".getBytes(),"CJYHD".getBytes());
-                CJYHDvalue=new String(CellUtil.cloneValue(CJYHDCell));
+                Cell CCBCell=result.getColumnLatestCell("info".getBytes(),"CCB".getBytes());
+                CCBvalue=new String(CellUtil.cloneValue(CCBCell));
+
+                String LJTMDZCLZLvalue="";
+                Cell LJTMDZCLZLCell=result.getColumnLatestCell("info".getBytes(),"LJTMDZCLZL".getBytes());
+                LJTMDZCLZLvalue=new String(CellUtil.cloneValue(LJTMDZCLZLCell));
+
+                String LJTMDZCLTJvalue="";
+                Cell LJTMDZCLTJCell=result.getColumnLatestCell("info".getBytes(),"LJTMDZCLTJ".getBytes());
+                LJTMDZCLTJvalue=new String(CellUtil.cloneValue(LJTMDZCLTJCell));
 
                 //打印所有列族信息
                 for(Cell cell : result.rawCells()){
@@ -54,7 +58,9 @@ public class OilSeaFieldCJYHDCluster {
                     log.info("值为：" + new String(CellUtil.cloneValue(cell)));
                 }
 
-                values[0]=Double.parseDouble(CJYHDvalue);
+                values[0]=Double.parseDouble(CCBvalue);
+                values[1]=Double.parseDouble(LJTMDZCLZLvalue);
+                values[2]=Double.parseDouble(LJTMDZCLTJvalue);
                 return Vectors.dense(values);
             }
         });
@@ -63,4 +69,5 @@ public class OilSeaFieldCJYHDCluster {
         int numClusters = 4;            //设置距离集群的个数
         MlibUtils.KMeansModelOilField(numClusters,parsedData);
     }
+
 }
