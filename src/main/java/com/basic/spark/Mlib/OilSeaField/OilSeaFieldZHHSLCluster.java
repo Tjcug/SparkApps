@@ -1,4 +1,4 @@
-package com.basic.spark.Mlib.KMeans;
+package com.basic.spark.Mlib.OilSeaField;
 
 import com.basic.spark.DataInput;
 import com.basic.spark.util.MlibUtils;
@@ -19,33 +19,32 @@ import scala.Tuple2;
 
 import java.io.IOException;
 
-//第1个参数是需要聚类的年份
 /**
- *  聚类石油田 按照油气田沉积岩厚度进行聚类
+ * 对油气田综合含水率进行聚类分析
  */
 
 /**
- * Created by xuzhanya on 16/5/23.
+ * Created by xuzhanya on 16/5/25.
  */
+public class OilSeaFieldZHHSLCluster {
+    private static final Logger log = LoggerFactory.getLogger(OilSeaFieldZHHSLCluster.class);
 
-public class OilSeaFieldCJYHDCluster {
-    private static final Logger log = LoggerFactory.getLogger(OilSeaFieldTMCDCluster.class);
     public static void main(String[] args) throws IOException {
-
-        SparkConf conf = new SparkConf().setAppName("OilSeaFieldCJYHDCluster").setMaster("local");
+        SparkConf conf = new SparkConf().setAppName("OilSeaFieldCZHHSLCluster").setMaster("local");
         JavaSparkContext jsc = new JavaSparkContext(conf);
 
         //数据导入
         JavaPairRDD<ImmutableBytesWritable, Result> myRDD = DataInput.getOilSeaFieldData(jsc,args[0]);
 
+        //如果参数是面积就按照面积进行聚类
         final JavaRDD<Vector> parsedData=myRDD.map(new Function<Tuple2<ImmutableBytesWritable, Result>, Vector>() {
             @Override
             public Vector call(Tuple2<ImmutableBytesWritable, Result> resultTuple2) throws Exception {
                 double[] values = new double[1];
-                String CJYHDvalue="";
+                String CZHHSLvalue="";
                 Result result=resultTuple2._2;
-                Cell CJYHDCell=result.getColumnLatestCell("info".getBytes(),"CJYHD".getBytes());
-                CJYHDvalue=new String(CellUtil.cloneValue(CJYHDCell));
+                Cell CZHHSLCell=result.getColumnLatestCell("info".getBytes(),"CZHHSL".getBytes());
+                CZHHSLvalue=new String(CellUtil.cloneValue(CZHHSLCell));
 
                 //打印所有列族信息
                 for(Cell cell : result.rawCells()){
@@ -54,7 +53,7 @@ public class OilSeaFieldCJYHDCluster {
                     log.info("值为：" + new String(CellUtil.cloneValue(cell)));
                 }
 
-                values[0]=Double.parseDouble(CJYHDvalue);
+                values[0]=Double.parseDouble(CZHHSLvalue);
                 return Vectors.dense(values);
             }
         });

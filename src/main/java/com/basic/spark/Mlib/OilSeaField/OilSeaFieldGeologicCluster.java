@@ -1,4 +1,4 @@
-package com.basic.spark.Mlib.KMeans;
+package com.basic.spark.Mlib.OilSeaField;
 
 import com.basic.spark.DataInput;
 import com.basic.spark.util.MlibUtils;

@@ -1,4 +1,4 @@
-package com.basic.spark.Mlib.KMeans;
+package com.basic.spark.Mlib.OilSeaField;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
