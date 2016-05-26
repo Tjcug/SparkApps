@@ -20,7 +20,7 @@ import scala.Tuple2;
 import java.io.IOException;
 
 /**
- * 对油气田储采程度进行聚类分析
+ * 对油气田采出程度进行聚类分析
  */
 
 /**
