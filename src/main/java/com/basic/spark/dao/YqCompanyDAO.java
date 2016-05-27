@@ -1,6 +1,6 @@
 package com.basic.spark.dao;
 
-import com.china.oil.application.entity.YqCompany;
+import com.basic.spark.entity.YqCompany;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

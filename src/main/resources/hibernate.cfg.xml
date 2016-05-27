@@ -5,6 +5,17 @@
 <hibernate-configuration>
 
 <session-factory>
+
+	<!--数据库连接设置 -->
+	<property name="connection.driver_class">
+		com.mysql.jdbc.Driver
+	</property>
+	<property name="connection.url">
+		jdbc:mysql://localhost:3306/oil
+	</property>
+	<property name="connection.username">root</property>
+	<property name="connection.password">123456</property>
+
 	<property name="dialect">
 		org.hibernate.dialect.MySQLDialect
 	</property>
@@ -45,6 +56,18 @@
 	<!--<class-cache usage="read-write" class="com.basic.bustation.model.Linestation" />-->
 	<!--<class-cache usage="read-write" class="com.basic.bustation.model.Roadstation" />-->
 	<!--<class-cache usage="read-write" class="com.basic.bustation.model.Roadline" />-->
+	<mapping resource="hibernateconf/OilfieldAreaCluster.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/OilfieldCccdCluster.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/OilfieldCjyhdCluster.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/OilfieldGeologicCluster.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/OilfieldStorageCluster.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/OilfieldTmcdCluster.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/OilfieldZhhslCluster.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/YqArea.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/YqCompany.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/YqOilField.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/YqOilStatus.hbm.xml"></mapping>
+	<mapping resource="hibernateconf/YqProvince.hbm.xml"></mapping>
 </session-factory>
 
 </hibernate-configuration>

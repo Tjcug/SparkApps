@@ -1,6 +1,7 @@
 package com.basic.spark.dao;
 
 import com.basic.spark.page.Pagination;
+import com.basic.spark.util.HibernateUtil;
 import com.basic.spark.util.ObjectUtil;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -8,7 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
-import javax.annotation.Resource;
+
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -23,12 +24,11 @@ import java.util.*;
  */
 @Repository("baseHibernateDAO")
 public class BaseHibernateDAOImpl<T> implements BaseHibernateDAO<T> {
-	
-	@Resource
-	private SessionFactory sessionFactory;
-	
+
+	private SessionFactory sessionFactory= HibernateUtil.getSessionFactory();
+
 	public Session getSession() {
-		return sessionFactory.getCurrentSession();
+		return sessionFactory.openSession();
 	}
 
 	protected Class<T> entityClazz;
