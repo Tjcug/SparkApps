@@ -11,7 +11,7 @@
 		com.mysql.jdbc.Driver
 	</property>
 	<property name="connection.url">
-		jdbc:mysql://localhost:3306/oil
+		jdbc:mysql://192.168.1.111:3306/oil
 	</property>
 	<property name="connection.username">root</property>
 	<property name="connection.password">123456</property>

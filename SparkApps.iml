@@ -77,15 +77,6 @@
     <orderEntry type="library" name="Maven: org.apache.directory.api:api-util:1.0.0-M20" level="project" />
     <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-common:2.5.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.hadoop:hadoop-annotations:2.5.1" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: jdk.tools:jdk.tools:1.6">
-        <CLASSES>
-          <root url="jar://C:/Program Files (x86)/Java/jdk1.8.0_20/lib/tools.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="Maven: xmlenc:xmlenc:0.52" level="project" />
     <orderEntry type="library" name="Maven: commons-el:commons-el:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.jcraft:jsch:0.1.42" level="project" />
