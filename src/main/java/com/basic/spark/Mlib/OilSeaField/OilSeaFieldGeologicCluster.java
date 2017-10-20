@@ -1,7 +1,9 @@
 package com.basic.spark.Mlib.OilSeaField;
 
 import com.basic.spark.DataInput;
-import com.basic.spark.util.MlibUtils;
+import com.basic.spark.dao.OilfieldGeologicClusterDAO;
+import com.basic.spark.entity.OilfieldGeologicCluster;
+import com.basic.spark.util.HBaseUtils;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -14,8 +16,12 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.VoidFunction;
+import org.apache.spark.mllib.clustering.KMeans;
+import org.apache.spark.mllib.clustering.KMeansModel;
 import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.linalg.Vectors;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Tuple2;
@@ -30,7 +36,7 @@ public class OilSeaFieldGeologicCluster {
     private static String[] oilFiedlGeoHYQCX;
     private static String[] getOilFiedlGeoYX;
     private static Configuration configuration;
-
+    private static String[] clusterType=new String[]{"地质类型1油田","地质类型2油田","地质类型3油田","地质类型4油田"};
     public static void main(String[] args) throws IOException {
 
         /**
@@ -50,7 +56,7 @@ public class OilSeaFieldGeologicCluster {
         /**
          *  读取配置文件oilSeaField.properties
          */
-
+        final String NF=args[0];
         SparkConf conf = new SparkConf().setAppName("OilSeaFieldGeologicCluster").setMaster("local");
         JavaSparkContext jsc = new JavaSparkContext(conf);
 
@@ -96,6 +102,71 @@ public class OilSeaFieldGeologicCluster {
 
         parsedData.cache();             //将数据缓存到内存中
         int numClusters = 4;            //设置距离集群的个数
-        MlibUtils.KMeansModelOilField(numClusters,parsedData);
+        int numIterations = 20;         //设置算法迭代次数
+        final KMeansModel KmeansModel= KMeans.train(parsedData.rdd(), numClusters, numIterations);
+        final double coast=KmeansModel.computeCost(parsedData.rdd());
+
+        double[] centers=new double[4];
+        System.out.println("Cluster centers:");
+        for(int i=0;i<KmeansModel.clusterCenters().length;i++){
+            Vector center=KmeansModel.clusterCenters()[i];
+            centers[i]= center.apply(0);
+            System.out.println(" " + center);
+        }
+
+        //存储数据结果集到上层关系型数据库中
+        myRDD.foreach(new VoidFunction<Tuple2<ImmutableBytesWritable, Result>>() {
+            @Override
+            public void call(Tuple2<ImmutableBytesWritable, Result> resultTuple2) throws Exception {
+                Result r=resultTuple2._2;
+                String YQTBM= HBaseUtils.getColumnValueByResult(r,"info","YQTBM");
+                String YQTMC=HBaseUtils.getColumnValueByResult(r,"info","YQTMC");
+                String PDMC=HBaseUtils.getColumnValueByResult(r,"info","PDMC");
+                String YQCLX=HBaseUtils.getColumnValueByResult(r,"info","YQCLX");
+                String HYQCXvalue=HBaseUtils.getColumnValueByResult(r,"info","HYQCX");
+                String YXvalue=HBaseUtils.getColumnValueByResult(r,"info","YX");
+
+                double[] values = new double[2];
+                for(int i=0;i<oilFiedlGeoHYQCX.length;i++){
+                    if(HYQCXvalue.equals(oilFiedlGeoHYQCX[i])){
+                        values[0]=(i+1)*100.0;
+                        break;
+                    }
+                }
+
+                for(int i=0;i<getOilFiedlGeoYX.length;i++){
+                    if(YXvalue.equals(getOilFiedlGeoYX[i])){
+                        values[1]=(i+1)*100.0;
+                        break;
+                    }
+               }
+                Vector vector=Vectors.dense(values);
+
+                int cluster_id=KmeansModel.predict(vector);
+                String cluster_type=clusterType[cluster_id];
+                log.info("YQTBM "+"油气田名称:"+YQTMC+" belong to "+cluster_id+" "+cluster_type);
+
+                //将数据存储到Mysql数据库中
+                OilfieldGeologicClusterDAO oilfieldGeologicClusterDAO=new OilfieldGeologicClusterDAO();
+                Session session=oilfieldGeologicClusterDAO.getSession();
+                session.beginTransaction();
+                OilfieldGeologicCluster geologicCluster=new OilfieldGeologicCluster();
+                geologicCluster.setClusterCost(coast);
+                geologicCluster.setClusterId(cluster_id);
+                geologicCluster.setPdmc(PDMC);
+                geologicCluster.setHyqcx(HYQCXvalue);
+                geologicCluster.setYx(YXvalue);
+                geologicCluster.setNf(NF);
+                geologicCluster.setYqclx(YQCLX);
+                geologicCluster.setYqtbm(YQTBM);
+                geologicCluster.setYqtmc(YQTMC);
+                geologicCluster.setClusterType(cluster_type);
+                session.save(geologicCluster);
+                session.getTransaction().commit();
+                session.close();
+            }
+        });
+        jsc.stop();
     }
 }
+

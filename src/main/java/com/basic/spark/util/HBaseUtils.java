@@ -403,6 +403,20 @@ public class HBaseUtils {
         return resultList;
     }
 
+    /**
+     *  得到列值通过Result对象
+     * @param result    Reustl对象
+     * @param familyName    列族
+     * @param qualifer      列名字
+     * @return
+     */
+    public static String getColumnValueByResult(Result result,String familyName,String qualifer){
+        String value="";
+        Cell cell=result.getColumnLatestCell(familyName.getBytes(),qualifer.getBytes());
+        value=new String(CellUtil.cloneValue(cell));
+        return value;
+    }
+
     public static Configuration getConf() {
         return conf;
     }
